@@ -3,13 +3,14 @@ import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.io.Serializable;
 
-public class RoomManager implements Serializable {
+public class RoomManager implements Serializable, Validatable {
 
     //Static field for total records
     public static int totalBookings = 0;
 
     private static Map<String, Double> rates = new HashMap<>();
     private static double taxRate;
+    private String lastError = "";
 
     //Static Initializer
     static {
@@ -67,4 +68,29 @@ public class RoomManager implements Serializable {
     public String getRoomType() { return roomType; }
     public LocalDate getCheckIn() { return checkIn; }
     public LocalDate getCheckOut() { return checkOut; }
+    
+    @Override
+    public boolean validateData() {
+        if (guestName == null || guestName.trim().isEmpty()) {
+            lastError = "Name field cannot be empty.";
+            return false;
+        }
+        
+        if (phoneNumber == null || !phoneNumber.matches(PHONE_REGEX)) {
+            lastError = "Phone number must be 10-11 digits only.";
+            return false;
+        }
+
+        if (checkOut.isBefore(checkIn) || checkOut.isEqual(checkIn)) {
+            lastError = "Check-out date must be after check-in.";
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public String getErrorMessage() {
+        return lastError;
+    }
 }
