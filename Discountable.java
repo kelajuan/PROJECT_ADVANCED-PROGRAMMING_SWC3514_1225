@@ -1,8 +1,11 @@
+// File: Discountable.java
 interface Discountable {
     double applyMemberDiscount(double price);
 }
 
-// Interface extension requirement
+// File: Billing.java
 interface Billing extends Discountable {
-    void processPayment(double amount) throws StayTerminatedException, InvalidPaymentException;
+    // Updated to include payment details
+    void processPayment(double totalCost, String paymentType, double amountPaid) 
+        throws StayTerminatedException, InvalidPaymentException;
 }
